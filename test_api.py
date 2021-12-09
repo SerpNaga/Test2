@@ -6,8 +6,8 @@ pf = PetFriends()
 
 def test_get_api_for_valid_user(email="elirichsss@mail.ru", password="ala123456"):
     status, result = pf.get_api_key(email, password)
-    assert status == 200
     assert 'key' in result
+    assert status == 200
     
 def test_get_api_for_invalid_user(email="", password=""):
     status, result = pf.get_api_key(email, password)
@@ -15,8 +15,8 @@ def test_get_api_for_invalid_user(email="", password=""):
 
 def test_get_api_pet_list_for_valid_key(auth_key= auth_key, filter = "my_pets"):
     status, result = pf.get_api_pet_list(auth_key, filter)
-    assert status == 200
     assert 'pets' in result
+    assert status == 200
 
 def test_get_api_for_pet_list_invalid_key(auth_key= "hhh", filter = "my_pets"):
     status, result = pf.get_api_pet_list(auth_key, filter)
@@ -24,6 +24,9 @@ def test_get_api_for_pet_list_invalid_key(auth_key= "hhh", filter = "my_pets"):
 
 def test_post_api_pet_for_valid_key_data(auth_key= auth_key, name="Hhh", animal_type="кот", age='hhh'):
     status, result = pf.post_api_create_pet(auth_key, name, animal_type, age)
+    assert result['name'] == name
+    assert result['animal_type'] == animal_type
+    assert result['age'] == age
     assert status == 200
 
 def test_post_api_pet_for_invalid_key(auth_key= "hhh", name="Hhh", animal_type="кот", age=-5):
@@ -36,6 +39,7 @@ def test_post_api_pet_for_invalid_data(auth_key= auth_key, name= None, animal_ty
 
 def test_post_api_delete_pet_for_valid_key(auth_key= auth_key, pet_id = pet_id):
     status, result = pf.delete_api_pet(auth_key, pet_id)
+    assert not result
     assert status == 200
 
 def test_post_api_delete_pet_for_invalid_key(auth_key= "hhh", pet_id = pet_id):
@@ -44,6 +48,9 @@ def test_post_api_delete_pet_for_invalid_key(auth_key= "hhh", pet_id = pet_id):
 
 def test_put_api_pet_for_valid_key_data(auth_key= auth_key, pet_id = pet_id2, name="Hhh", animal_type="кот", age='-5-'):
     status, result = pf.put_api_pet(auth_key, pet_id, name, animal_type, age)
+    assert result['name'] == name
+    assert result['animal_type'] == animal_type
+    assert result['age'] == age
     assert status == 200
 
 def test_put_api_pet_for_invalid_key(auth_key= "hhh", pet_id = pet_id2, name="Hhh", animal_type="кот", age=-5):
@@ -56,6 +63,10 @@ def test_put_api_pet_for_invalid_data(auth_key= auth_key, pet_id = 'hhh', name= 
 
 def test_post_api_photo_pet_for_valid_key_data(auth_key= auth_key, name="Hhh", animal_type="кот", age='hhh', pet_photo='Preview.jpg'):
     status, result = pf.post_api_create_photo_pet(auth_key, name, animal_type, age, pet_photo)
+    assert result['name'] == name
+    assert result['animal_type'] == animal_type
+    assert result['age'] == age
+    assert len(result['pet_photo']) > 0
     assert status == 200
 
 def test_post_api_photo_pet_for_invalid_key(auth_key= "hhh", name="Hhh", animal_type="кот", age='hhh', pet_photo='Preview.jpg'):
@@ -64,6 +75,7 @@ def test_post_api_photo_pet_for_invalid_key(auth_key= "hhh", name="Hhh", animal_
 
 def test_post_api_add_photo_pet_for_valid_key_data(auth_key= auth_key, pet_id = pet_id3, pet_photo='Preview.jpg'):
     status, result = pf.post_api_add_photo_pet(auth_key, pet_id, pet_photo)
+    assert len(result['pet_photo']) > 0
     assert status == 200
 
 def test_post_api_add_photo_pet_for_invalid_data(auth_key= auth_key, pet_id = "hhh", pet_photo='WB3.jpg'):
